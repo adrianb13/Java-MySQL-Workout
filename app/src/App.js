@@ -4,6 +4,7 @@ import './App.css';
 
 import history from "./history/history.js";
 import Home from "./components/Home.js";
+import Update from "./components/Update.js";
 
 class App extends React.Component {
 	render(){
@@ -11,6 +12,8 @@ class App extends React.Component {
 			<Router history={history}>
 				<Switch>
 					<Route exact path="/" component={Home} />
+					<Route exact path="/steps" component={Home} />
+					<Route exact path="/steps/:id" component={Update} />
 					<Route component={Home} />
 				</Switch>
 			</Router>

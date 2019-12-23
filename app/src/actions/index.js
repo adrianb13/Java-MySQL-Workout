@@ -33,7 +33,9 @@ export const updateStep = (step) => {
 	return (dispatch) => {
 		return API.updateStep(step)
 		.then(res => {
-			dispatch(updateStepSuccess(res.config.data))
+			dispatch(updateStepSuccess(res.data));
+			//API.getSteps();
+			return res;
 		})
 		.catch(err => console.log(err));
 	};
@@ -47,7 +49,9 @@ export const deleteStep = (step) => {
 	return (dispatch) => {
 		return API.deleteStep(step)
 		.then(res => {
-			dispatch(deleteStepSuccess(res))
+			dispatch(deleteStepSuccess(step))
+			API.getSteps();
+			return res;
 		})
 		.catch(err => console.log(err));
 	};

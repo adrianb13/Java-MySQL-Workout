@@ -49,7 +49,7 @@ public class WorkoutController {
       }
   }
 	
-	@DeleteMapping(path = "steps/{id}")
+	@DeleteMapping(path = "/steps/{id}")
 	public void deleteStep(@PathVariable int id) {
 		workoutRepository.deleteById(id);
 	}

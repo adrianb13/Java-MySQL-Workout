@@ -16,16 +16,22 @@ const rootReducer = (state = initialState, action) => {
 				Object.assign({}, action.step)
 			]
 		case types.UPDATE_STEP_SUCCESS:
-			return [
-				...state.filter(step => step.id !== action.step.id),
-				Object.assign({}, action.step)
-			]
+			const newState = Object.assign([], state);
+			const updatedStep = newState.steps.filter(step => {
+				return parseInt(step.id) === parseInt(action.step.id);
+			})
+			const id = newState.steps.indexOf(updatedStep[0].id);
+			newState.steps.splice(id, 1, action.step);
+			return newState;
+
+			
 		case types.DELETE_STEP_SUCCESS: {
 			const newState = Object.assign([], state);
-			const indexOfStepToDelete = state.filter(step => {
-				return parseInt(step.id) === parseInt(action.step.id)
+			const removeStep = newState.steps.filter(step => {
+				return parseInt(step.id) === parseInt(action.step.id);
 			})
-			newState.splice(indexOfStepToDelete, 1);
+			const id = newState.steps.indexOf(removeStep[0].id);
+			newState.steps.splice(id, 1);
 			return newState;
 		}
 		default: 
