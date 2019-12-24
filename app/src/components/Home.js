@@ -2,6 +2,9 @@ import React from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import {deleteStep} from "../actions/index.js";
+import "../App.css";
+
+import Add from "./Add.js";
 
 class Home extends React.Component {
 	state = {
@@ -27,13 +30,14 @@ class Home extends React.Component {
 	dataLoad = () => {
 		this.setState({
 			steps: this.props.steps
-		})
+		}, () => {
 		if(this.state.steps.length > 0){
 			this.setState({
 				loaded: true,
-				steps: this.props.steps
+				steps: this.state.steps
 			})
 		}
+		})
 	}
 	
 	deleteStep = (step) => {
@@ -43,8 +47,7 @@ class Home extends React.Component {
 		})
 	}
 	
-	addButton = (event) => {
-		event.preventDefault();
+	addButton = () => {
 		this.setState({
 			add: !this.state.add
 		})
@@ -52,17 +55,18 @@ class Home extends React.Component {
 	
 	render(){
 		return(
-			<div>
+			<div className="back">
 				<div>
+					<h1 className="header">Workout Routine</h1>
 					<div className="container-table">
 						<table className="table">
 							<thead>
 								<tr>
-									<th>Name</th>
-									<th>Reps</th>
-									<th>Description</th>
-									<th>Update</th>
-									<th>Delete</th>
+									<th id="tId">Name</th>
+									<th id="tReps">Reps</th>
+									<th id="tDesc">Description</th>
+									<th id="tUpd">Update</th>
+									<th id="tDel">Delete</th>
 								</tr>
 							</thead>
 							{this.state.loaded ? (
@@ -70,10 +74,10 @@ class Home extends React.Component {
 								{this.state.steps.map( step => (
 									<tr key={step.id}>
 										<td>{step.name}</td>
-										<td>{step.reps}</td>
+										<td id="tReps">{step.reps}</td>
 										<td>{step.description}</td>
-										<td><button><Link to={"/steps/" + step.id}>Update</Link></button></td>
-										<td><button onClick={() => this.deleteStep(step)}>Delete</button></td>
+										<td id="bUpd"><Link to={"/steps/" + step.id}>Update</Link></td>
+										<td id="bDel" onClick={() => this.deleteStep(step)}>Delete</td>
 									</tr>
 								))}
 								</tbody>
@@ -90,13 +94,15 @@ class Home extends React.Component {
 						</table>
 						<div>
 							{this.state.add ? (
-								<div>
-									<div>Add Me</div>
-									<button onClick={this.addButton}>Cancel</button>
+								<div id="add">
+									<Add
+										addButton={this.addButton}
+									/>
+									
 								</div>
 							) : (
-								<div>
-									<button onClick={this.addButton}>Add Workout Step</button>
+								<div id="add">
+									<button className="bAdd" onClick={this.addButton}>Add To Workout</button>
 								</div>
 							)}
 						</div>
@@ -109,7 +115,7 @@ class Home extends React.Component {
 
 const mapStateToProps = state => {
 	let step = {id: null, name: "", reps: null, description: ""};
-	if(!state.steps.length > 0){
+	if(!state.steps.length){
 		return { steps: step};
 	} else {
 		console.log(state.steps)
