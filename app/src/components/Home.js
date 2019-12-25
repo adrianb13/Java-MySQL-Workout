@@ -1,49 +1,50 @@
 import React from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import {deleteStep} from "../actions/index.js";
+import { getSteps, deleteStep} from "../actions/index.js";
 import "../App.css";
 
 import Add from "./Add.js";
 
 class Home extends React.Component {
-	state = {
-		loaded: false,
-		add: false
+	constructor(props) {
+		super(props)
+		this.state = {
+			steps: [],
+			loaded: false,
+			add: false
+		}
 	}
 	
-	componentDidMount(){
-		this.interval();
-	}
+	componentDidUpdate(){
+		if(this.props.steps !== this.state.steps){
+			this.dataLoad();
+		}
+	}	
 	
 	componentWillUnmount = () => {
 		clearInterval(this.state.intervalId);
 	}
-	
-	interval = () => {
-		let intervalId = setInterval(this.dataLoad, 100)
-		this.setState({
-			intervalId: intervalId,
-		})
-	}
-	
+		
 	dataLoad = () => {
+		console.log("dataLoad")
+		console.log(this.state.steps)
+		console.log(this.props.steps)
 		this.setState({
 			steps: this.props.steps
 		}, () => {
-		if(this.state.steps.length > 0){
-			this.setState({
-				loaded: true,
-				steps: this.state.steps
-			})
-		}
+			if(this.props.steps.length > 0){
+				this.setState({
+					loaded: true
+				})
+			}
 		})
 	}
 	
 	deleteStep = (step) => {
 		this.props.deleteStep(step)
 		.then(res => {
-			console.log(res);			
+			console.log(res);
 		})
 	}
 	
@@ -84,10 +85,11 @@ class Home extends React.Component {
 							) : (
 								<tbody>
 									<tr>
-										<td></td>
-										<td></td>
-										<td></td>
-										<td></td>
+										<td> </td>
+										<td> </td>
+										<td> </td>
+										<td> </td>
+										<td> </td>
 									</tr>
 								</tbody>
 							)}
@@ -114,17 +116,24 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = state => {
-	let step = {id: null, name: "", reps: null, description: ""};
-	if(!state.steps.length){
+	/*let step = {id: null, name: "", reps: null, description: ""};
+	if(!state.steps){
+		console.log("none")
+		console.log(state.steps)
 		return { steps: step};
 	} else {
 		console.log(state.steps)
 		return { steps: state.steps}
-	}
+	}*/
+	console.log(state.steps)
+	return { steps: state.steps}
 }
 
 const mapDispatchToProps = dispatch => {
-	  return { deleteStep: step => dispatch(deleteStep(step))}
+	  return { 
+		  deleteStep: step => dispatch(deleteStep(step)),
+		  getSteps: () => dispatch(getSteps())
+	  }
 	}
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));

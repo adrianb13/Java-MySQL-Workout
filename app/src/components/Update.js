@@ -42,7 +42,7 @@ class Update extends React.Component {
 			description: this.state.description
 		})
 		.then(res => {
-			
+			console.log(res)
 		})
 		.catch(err => console.log(err));
 		this.props.history.push("/steps");

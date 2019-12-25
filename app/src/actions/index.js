@@ -17,10 +17,8 @@ const getStepsSuccess = (steps) => {
 
 export const saveStep = (step) => {
 	return (dispatch) => {
-		console.log(step)
 		return API.saveStep(step)
 		.then(res => {
-			console.log(res)
 			dispatch(saveStepSuccess(res.data))
 			return res;
 		})
@@ -37,6 +35,7 @@ export const updateStep = (step) => {
 		return API.updateStep(step)
 		.then(res => {
 			dispatch(updateStepSuccess(res.data));
+			return res;
 		})
 		.catch(err => console.log(err));
 	};
