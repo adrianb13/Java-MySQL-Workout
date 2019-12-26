@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WorkoutJavaReactMySqlApplication {
+public class WorkoutJavaMySqlApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WorkoutJavaReactMySqlApplication.class, args);
+		SpringApplication.run(WorkoutJavaMySqlApplication.class, args);
 	}
 
 }
