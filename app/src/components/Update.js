@@ -1,14 +1,15 @@
 import React from "react";
-import {withRouter, Link} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-
-import {updateStep} from "../actions/index.js";
+import { bindActionCreators } from "redux";
+import * as actions from "../actions/index.js";
 
 class Update extends React.Component {
 	state = {
 		name: this.props.step.name,
 		reps: this.props.step.reps,
-		description: this.props.step.description
+		description: this.props.step.description,
+		redirect: false
 	}
 			
 	stepInfo = (event) => {
@@ -35,20 +36,20 @@ class Update extends React.Component {
 				description: this.props.step.description
 			})
 		}
-		this.props.updateStep({
-			id: this.props.stepId,
+		this.props.actions.updateStep({
+			id: this.props.id,
 			name: this.state.name,
 			reps: parseInt(this.state.reps),
 			description: this.state.description
 		})
 		.then(res => {
-			console.log(res)
-		})
-		.catch(err => console.log(err));
-		this.props.history.push("/steps");
+			//this.props.updateStep(res.data)
+			console.log(res.data)})
+		.catch(err => console.log(err))
+		this.props.updateButton();
 	}
 	
-	render(){
+	render(){		
 		return(
 			<div className="back">
 				<div id="updCont" onChange={this.stepInfo}>
@@ -66,28 +67,16 @@ class Update extends React.Component {
 						<textarea name="description" placeholder={this.props.step.description}></textarea>
 					</div>
 					<button className="bAdd" onClick={this.updateStep}>Update</button>
-					<button className="bAdd" id="bCxl"><Link id="noUnd" to={"/steps"}>Cancel</Link></button>
+					<button className="bAdd" id="bCxl" onClick={this.props.updateButton}>Cancel</button>
 				</div>
 			</div>
 		)
 	}
 }
 
-const mapStateToProps = (state, props) => {
-	let stepId = props.match.params.id;
-	let step = {id: null, name: "", reps: null, description: ""};
-	console.log(state.steps)
-	if(stepId && state.steps.length !== 0) {
-		step = Object.assign({}, state.steps.find(step => parseInt(step.id) === parseInt(stepId)))
-	}
-	return {
-		step: step,
-		stepId: stepId
-	}
-}
 
 const mapDispatchToProps = dispatch => {
-	  return { updateStep: step => dispatch(updateStep(step))}
+	  return {actions: bindActionCreators(actions, dispatch)}
 	}
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Update));
+export default withRouter(connect(null, mapDispatchToProps)(Update));

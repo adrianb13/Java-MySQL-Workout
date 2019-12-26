@@ -47,7 +47,7 @@ class Add extends React.Component {
 	
 	render(){
 		return(
-			<div>
+			<div id="addCont">
 				<h2>Add To Your Workout</h2>
 				<div onChange={this.stepInfo}>
 					<div>{this.state.message}</div>

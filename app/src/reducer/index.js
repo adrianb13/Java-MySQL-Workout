@@ -17,19 +17,14 @@ const rootReducer = (state = initialState, action) => {
 			});
 			
 		case types.UPDATE_STEP_SUCCESS:
-			/*return state.steps.map(step => {
-				if(step.id === action.step.id){
-					return step = action.step;
-				} else {
-					return step;
-				}
-			});*/
 			const list = Object.assign([], state.steps);
 			const item = list.filter(step => step.id === action.step.id)
 			const index = list.indexOf(item[0]);	
 			list.splice(index, 1, action.step)
 			console.log(list)
-			return list;
+			return Object.assign({}, state, {
+				steps: list
+			})
 			
 		case types.DELETE_STEP_SUCCESS: {
 			const newState = Object.assign([], state);

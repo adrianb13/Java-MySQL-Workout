@@ -1,6 +1,7 @@
 body {
 	margin: 0;
 	padding: 0;
+	background: lavender;
 }
 .back {
 	height: 100vh;
@@ -64,6 +65,9 @@ a:link, a:visited, a:hover, a:active {
 }
 
 /* Add Form Area */
+#addCont {
+	padding-bottom: 10px;
+}
 #add {
 	text-align: center;
 	margin: 30px auto;

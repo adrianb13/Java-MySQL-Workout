@@ -1,23 +1,29 @@
 import React from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { getSteps, deleteStep} from "../actions/index.js";
+import { bindActionCreators } from "redux";
+import * as actions from "../actions/index.js";
 import "../App.css";
 
 import Add from "./Add.js";
+import Update from "./Update.js";
 
 class Home extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
 			steps: [],
+			step: {},
 			loaded: false,
 			add: false
 		}
 	}
-	
-	componentDidUpdate(){
-		if(this.props.steps !== this.state.steps){
+	componentDidMount = () => {
+		this.dataLoad();
+	}
+	componentDidUpdate(nextProps){
+		console.log(nextProps.steps)
+		if(this.props.steps !== nextProps.steps){
 			this.dataLoad();
 		}
 	}	
@@ -28,22 +34,26 @@ class Home extends React.Component {
 		
 	dataLoad = () => {
 		console.log("dataLoad")
-		console.log(this.state.steps)
-		console.log(this.props.steps)
-		this.setState({
-			steps: this.props.steps
-		}, () => {
-			if(this.props.steps.length > 0){
-				this.setState({
-					loaded: true
-				})
-			}
-		})
+		if(this.props.steps){
+			this.setState({
+				steps: this.props.steps
+			}, () => {
+				console.log(this.state.steps.length)
+				if(this.state.steps.length > 0){
+					this.setState({
+						loaded: true
+					}, () => {
+						console.log("loading")
+					})
+				}
+			})
+		}
 	}
-	
+			
 	deleteStep = (step) => {
-		this.props.deleteStep(step)
+		this.props.actions.deleteStep(step)
 		.then(res => {
+			this.dataLoad();
 			console.log(res);
 		})
 	}
@@ -54,6 +64,36 @@ class Home extends React.Component {
 		})
 	}
 	
+	updateButton = () => {
+		this.setState({
+			update: !this.state.update
+		})
+	}
+	
+	findOne = (step) => {
+		this.setState({
+			step: step
+		}, () => {
+			this.updateButton()
+		})
+	}
+	
+	updateStep = (step) => {
+		this.setState({
+			step: step
+		}, () => {
+			console.log(this.state.step)
+			const list = this.state.steps;
+			const item = list.filter(step => step.id === this.state.step.id)
+			const index = list.indexOf(item[0]);	
+			list.splice(index, 1, this.state.step)
+			console.log(list)
+			this.setState({
+				steps: list
+			})
+		})
+	}
+		
 	render(){
 		return(
 			<div className="back">
@@ -77,7 +117,7 @@ class Home extends React.Component {
 										<td>{step.name}</td>
 										<td id="tReps">{step.reps}</td>
 										<td>{step.description}</td>
-										<td id="bUpd"><Link to={"/steps/" + step.id}>Update</Link></td>
+										<td id="bUpd" onClick={() => this.findOne(step)}>Update</td>
 										<td id="bDel" onClick={() => this.deleteStep(step)}>Delete</td>
 									</tr>
 								))}
@@ -95,6 +135,16 @@ class Home extends React.Component {
 							)}
 						</table>
 						<div>
+							{this.state.update ? (
+								<Update
+									id= {this.state.step.id}
+									step = {this.state.step}
+									updateButton = {this.updateButton}
+									updateStep = {this.updateStep}
+								>
+								</Update>
+							) : (
+							<div>
 							{this.state.add ? (
 								<div id="add">
 									<Add
@@ -107,6 +157,8 @@ class Home extends React.Component {
 									<button className="bAdd" onClick={this.addButton}>Add To Workout</button>
 								</div>
 							)}
+							</div>
+							)}
 						</div>
 					</div>
 				</div>
@@ -116,24 +168,18 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = state => {
-	/*let step = {id: null, name: "", reps: null, description: ""};
-	if(!state.steps){
-		console.log("none")
-		console.log(state.steps)
-		return { steps: step};
-	} else {
+	/*if(state.steps.length > 0){
 		console.log(state.steps)
 		return { steps: state.steps}
+	} else {
+		return { steps: [{id: null, name: "", reps: null, description: ""}]};
 	}*/
 	console.log(state.steps)
 	return { steps: state.steps}
 }
 
 const mapDispatchToProps = dispatch => {
-	  return { 
-		  deleteStep: step => dispatch(deleteStep(step)),
-		  getSteps: () => dispatch(getSteps())
-	  }
+	  return {actions: bindActionCreators(actions, dispatch)}
 	}
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));
