@@ -20,7 +20,7 @@ import com.workout.repository.WorkoutRepository;
 
 import javassist.tools.web.BadHttpRequest;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "https://adrianb13.github.io/ReactRedux-Workout/"})
 @RestController
 @RequestMapping("/api")
 public class WorkoutController {
