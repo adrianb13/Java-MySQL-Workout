@@ -20,7 +20,7 @@ import com.workout.repository.WorkoutRepository;
 
 import javassist.tools.web.BadHttpRequest;
 
-@CrossOrigin(origins = {"http://localhost:3000", "https://adrianb13.github.io/"})
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 public class WorkoutController {
